@@ -83,6 +83,41 @@ input{width:min(260px,100%)}
 footer{background:var(--blue2);color:#cfd6ff;font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:600px){.hero .wrap{grid-template-columns:1fr}.fan{height:300px}.fan a{width:130px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card h3{font-size:14px}input{width:100%}}
+nav a.l[aria-current=page]{background:var(--yel);color:var(--line);border-radius:10px;padding:8px 14px;opacity:1;text-decoration:none}
+body[data-view=lb] .bar,body[data-view=lb] #shorts{display:none}
+body:not([data-view=lb]) #clasament{display:none}
+.scroll{overflow-x:auto}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end;margin:0 auto 28px;max-width:760px}
+.pod{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:var(--ink);cursor:pointer;background:none;border:0;font:inherit;padding:0}
+.pod .ava{width:72px;height:72px;font-size:30px;border-width:3px}
+.pod b{font:20px/1.1 "Lilita One",sans-serif;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .val{font-weight:800;color:var(--muted);font-size:14px}
+.step{width:100%;border:3px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 6px 0 var(--line);display:grid;place-items:center;font:44px "Lilita One",sans-serif;color:var(--line)}
+.p1 .step{height:150px;background:var(--yel)}.p2 .step{height:110px;background:#d7defc}.p3 .step{height:84px;background:#ffb27a}
+.p1{order:2}.p2{order:1}.p3{order:3}
+.lb{width:100%;min-width:860px;border-collapse:separate;border-spacing:0;background:var(--card);border:3px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 0 var(--line)}
+.lb th{background:var(--blue2);color:#fff;text-align:left;padding:0;font-size:13px;white-space:nowrap}
+.lb th button{all:unset;cursor:pointer;display:block;padding:12px 12px;font-weight:800;width:100%;box-sizing:border-box}
+.lb th button:focus-visible{outline:3px solid var(--yel);outline-offset:-3px}
+.lb th[aria-sort] button{background:var(--pink)}
+.lb th.num button,.lb td.num{text-align:right}
+.lb td{padding:12px;border-top:2px solid light-dark(#e3e7fb,#222a6a);vertical-align:middle;font-size:15px}
+.lb td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+.lb .rk{font:22px "Lilita One",sans-serif;width:48px;text-align:center}
+.lb tr:nth-child(1) .rk{color:#d9a400}.lb tr:nth-child(2) .rk{color:#7d8bc4}.lb tr:nth-child(3) .rk{color:#e0742c}
+.lb .cr{display:flex;align-items:center;gap:10px;font-weight:800;background:none;border:0;color:inherit;font:inherit;font-weight:800;cursor:pointer;padding:0;text-align:left}
+.lb .cr:hover span{text-decoration:underline}
+.lb .cr span{white-space:nowrap}
+.vb{height:8px;border-radius:9px;background:var(--pink);margin-top:6px;margin-left:auto;min-width:3px}
+.best{max-width:240px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;text-decoration:none}
+.best:hover{text-decoration:underline}
+.best small{color:var(--muted);font-weight:700}
+.note{color:var(--muted);font-size:14px;margin:16px 0 0;max-width:70ch}
+.how{margin-top:20px;background:var(--card);border:3px solid var(--line);border-radius:16px;padding:14px 18px;box-shadow:0 5px 0 var(--line);max-width:760px}
+.how summary{font-weight:800;cursor:pointer;min-height:28px}
+.how p,.how li{color:var(--muted);font-size:15px}.how b{color:var(--ink)}
+.lb td.sc{font:20px "Lilita One",sans-serif}
+@media(max-width:600px){.pod .ava{width:52px;height:52px;font-size:22px}.pod b{font-size:15px}.p1 .step{height:110px}.p2 .step{height:80px}.p3 .step{height:60px}.step{font-size:32px}}
 .modal{position:fixed;inset:0;z-index:20;background:rgba(5,8,30,.85);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.on{display:flex}
 .mbox{width:min(380px,100%);display:flex;flex-direction:column;gap:10px}
@@ -96,8 +131,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <nav><div class="wrap">
   <a class="logo" href="#top"><b>BRAWL</b> Shorts</a>
   <span class="sp"></span>
-  <a class="l" href="#shorts">Shorturi</a>
-  <a class="l" href="#creatori">Creatori</a>
+  <a class="l" href="#top" data-v="sh">Shorturi</a>
+  <a class="l" href="#clasament" data-v="lb">Clasament</a>
 </div></nav>
 
 <header class="hero band" id="top">
@@ -105,7 +140,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="wrap">
     <div>
       <h1>Cele mai noi shorturi de Brawl, într-un singur loc</h1>
-      <p>Toate shorturile creatorilor de Brawl Stars adunate pe un perete. Alege un creator, caută un titlu și apasă pe card ca să-l vezi pe YouTube.</p>
+      <p>Toate shorturile creatorilor de Brawl Stars adunate pe un perete. Alege un creator, caută un titlu și apasă pe card ca să-l vezi, sau compară creatorii în clasament.</p>
       <div class="stats" id="stats"></div>
     </div>
     <div class="fan" id="fan" aria-label="Cele mai vizionate shorturi"></div>
@@ -126,6 +161,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="head"><h2 id="gtitle">Toate shorturile</h2><p id="count"></p></div>
   <div class="grid" id="grid"><div class="empty" style="grid-column:1/-1">Se încarcă shorturile…</div></div>
 </div></main>
+
+<section class="band" id="clasament"><div class="wrap">
+  <div class="head"><h2>Clasamentul creatorilor</h2><p id="lbsub"></p></div>
+  <div class="podium" id="podium"></div>
+  <div class="scroll"><table class="lb" id="lb"><thead><tr id="lbhead"></tr></thead><tbody id="lbbody"></tbody></table></div>
+  <details class="how"><summary>Cum se calculează scorul</summary>
+    <p>Scorul (0–100) adună cinci criterii. La fiecare criteriu, cel mai bun creator ia punctajul maxim, cel mai slab ia 0, iar ceilalți sunt între ei; vizionările și abonații sunt pe scară logaritmică, ca mărimea canalului să nu decidă singură.</p>
+    <ul><li><b>30%</b> vizionări totale</li><li><b>25%</b> medie de vizionări pe short</li><li><b>20%</b> shorturi postate în ultimele 30 de zile</li><li><b>15%</b> abonați</li><li><b>10%</b> cât de recent a postat (0 dacă n-a postat de 30 de zile)</li></ul>
+    <p>Apasă pe titlul unei coloane ca să sortezi după ea. Ține mouse-ul pe un scor ca să vezi din ce e format. Vizionările și shorturile se calculează din shorturile adunate pe site.</p>
+  </details>
+</div></section>
 
 <footer class="band"><div class="wrap">
   <span>Brawl Shorts · site de fani, neafiliat cu Supercell.</span>
@@ -178,6 +224,52 @@ document.getElementById("mclose").addEventListener("click",close);
 modal.addEventListener("click",e=>{if(e.target===modal)close()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
 
+const DAY=864e5;
+// Ponderile scorului (se adună la 100). Schimbă numerele de aici ca să conteze mai mult sau mai puțin un criteriu.
+const W={views:30,avg:25,month:20,subs:15,recent:10};
+const COLS=[
+ {k:"score",l:"Scor",num:1,f:v=>v.toFixed(1),bar:1},
+ {k:"views",l:"Vizionări totale",num:1,f:v=>fmt(v)},
+ {k:"avg",l:"Medie / short",num:1,f:v=>fmt(Math.round(v))},
+ {k:"month",l:"Shorturi în 30 zile",num:1,f:v=>v},
+ {k:"subs",l:"Abonați",num:1,f:v=>v?fmt(v):"—"},
+ {k:"last",l:"Ultimul short",num:1,f:v=>v?fdate(v):"—",sortBy:c=>c.last||""},
+ {k:"n",l:"Shorturi pe site",num:1,f:v=>v},
+ {k:"best",l:"Cel mai vizionat short",sortBy:c=>c.bestViews}
+];
+let lbKey="score";
+const stats=()=>{const now=Date.now();
+  const rows=CREATORS.map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const views=mine.reduce((a,s)=>a+s.views,0);
+    const best=mine.reduce((a,s)=>!a||s.views>a.views?s:a,null);const last=mine.reduce((a,s)=>s.date>a?s.date:a,"");
+    return {c,key:c.key,name:c.name,subs:c.subs||0,n:mine.length,views,avg:mine.length?views/mine.length:0,
+      month:mine.filter(s=>now-new Date(s.date+"T12:00:00Z")<=30*DAY).length,best,bestViews:best?best.views:0,last,
+      days:last?(now-new Date(last+"T12:00:00Z"))/DAY:999}});
+  const norm=(k,log)=>{const f=v=>log?Math.log10(1+v):v;const vs=rows.map(r=>f(r[k]));const lo=Math.min(...vs),hi=Math.max(...vs);
+    rows.forEach(r=>{(r.parts||(r.parts={}))[k]=hi>lo?(f(r[k])-lo)/(hi-lo):1})};
+  norm("views",1);norm("avg",1);norm("month",0);norm("subs",1);
+  rows.forEach(r=>{r.parts.recent=Math.max(0,1-r.days/30);r.score=Object.keys(W).reduce((a,k)=>a+W[k]*r.parts[k],0)});
+  return rows};
+const val=(r,col)=>col.sortBy?col.sortBy(r):r[col.k];
+const goCreator=k=>{cur=k;renderCreators();render();location.hash="shorts"};
+const renderLB=()=>{
+  const col=COLS.find(c=>c.k===lbKey);const rows=stats().sort((a,b)=>{const x=val(a,col),y=val(b,col);return (y>x)-(y<x)||b.score-a.score});
+  document.getElementById("lbsub").textContent=rows.length+" creatori · sortat după „"+col.l.toLowerCase()+"”";
+  document.getElementById("lbhead").innerHTML='<th>#</th><th>Creator</th>'+COLS.map(c=>`<th class="${c.num?"num":""}"${c.k===lbKey?' aria-sort="descending"':""}><button data-k="${c.k}">${c.l}${c.k===lbKey?" ▼":""}</button></th>`).join("");
+  document.getElementById("lbbody").innerHTML=rows.map((r,i)=>`<tr><td class="rk">${i+1}</td><td><button class="cr" data-k="${esc(r.key)}">${ava(r.key,r.name)}<span>${esc(r.name)}</span></button></td>`+COLS.map(c=>{
+    if(c.k==="best")return `<td>${r.best?`<a class="best" href="https://www.youtube.com/shorts/${esc(r.best.id)}" target="_blank" rel="noopener">${esc(r.best.title)} <small>· ${fmt(r.best.views)}</small></a>`:"—"}</td>`;
+    if(c.k==="score")return `<td class="num sc" title="${Object.keys(W).map(k=>k+": "+(W[k]*r.parts[k]).toFixed(1)+"/"+W[k]).join(" · ")}">${r.score.toFixed(1)}<div class="vb" style="width:${r.score.toFixed(1)}%"></div></td>`;
+    return `<td class="num">${esc(c.f(r[c.k]))}</td>`}).join("")+"</tr>").join("");
+  const top=rows.slice(0,3);
+  document.getElementById("podium").innerHTML=top.map((r,i)=>`<button class="pod p${i+1}" data-k="${esc(r.key)}">${ava(r.key,r.name)}<b>${esc(r.name)}</b><span class="val">${esc(col.k==="score"?r.score.toFixed(1)+" puncte":col.k==="best"?fmt(r.bestViews)+" viz.":col.k==="last"?(r.last?fdate(r.last):"—"):col.f(r[col.k]))}</span><div class="step">${i+1}</div></button>`).join("");
+};
+document.getElementById("lbhead").addEventListener("click",e=>{const b=e.target.closest("button");if(b){lbKey=b.dataset.k;renderLB()}});
+document.getElementById("clasament").addEventListener("click",e=>{const b=e.target.closest(".cr,.pod");if(b)goCreator(b.dataset.k)});
+const route=()=>{const lb=location.hash==="#clasament";document.body.dataset.view=lb?"lb":"sh";
+  document.querySelectorAll("nav a[data-v]").forEach(a=>a.toggleAttribute("aria-current",a.dataset.v===(lb?"lb":"sh")));
+  document.querySelectorAll("nav a[data-v]").forEach(a=>{if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
+  if(lb)renderLB()};
+addEventListener("hashchange",route);route();
+
 Promise.all([fetch("channels.json",{cache:"no-store"}).then(r=>r.json()),fetch("data/shorts.json",{cache:"no-store"}).then(r=>r.json())]).then(([ch,data])=>{
   CREATORS=ch;AV=Object.fromEntries(ch.filter(c=>c.avatar).map(c=>[c.key,c.avatar]));HANDLE=Object.fromEntries(ch.map(c=>[c.key,c.handle]));const names=Object.fromEntries(ch.map(c=>[c.key,c.name]));
   ALL=data.shorts.filter(s=>names[s.ck]).map(s=>({...s,cname:names[s.ck]}));
@@ -187,7 +279,7 @@ Promise.all([fetch("channels.json",{cache:"no-store"}).then(r=>r.json()),fetch("
   const top3=[...ALL].sort((a,b)=>b.views-a.views).slice(0,3);
   document.getElementById("fan").innerHTML=[top3[1],top3[0],top3[2]].filter(Boolean).map(card).join("");
   if(data.updated){const d=new Date(data.updated);document.getElementById("upd").textContent="Actualizat automat: "+d.toLocaleString("ro-RO",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
-  renderCreators();render();
+  renderCreators();render();route();
 }).catch(()=>{document.getElementById("grid").innerHTML='<div class="empty" style="grid-column:1/-1">Nu am putut încărca shorturile. Reîncarcă pagina.</div>'});
 }
 </script>
