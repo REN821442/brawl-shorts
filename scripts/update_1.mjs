@@ -26,11 +26,18 @@ async function resolveChannelId(ch) {
 async function refreshAvatar(ch) {
   try {
     const handle = ch.handle.startsWith("@") ? ch.handle : "@" + ch.handle;
-    const html = await (await fetch(`https://www.youtube.com/${handle}`, { headers: UA })).text();
+    const html = await (await fetch(`https://www.youtube.com/${handle}`, {
+      headers: { ...UA, Cookie: "CONSENT=YES+cb; SOCS=CAI" },
+    })).text();
     const m = html.match(/<meta property="og:image" content="([^"]+)"/)
-      || html.match(/"avatar":\{"thumbnails":\[\{"url":"([^"]+)"/);
+      || html.match(/<link itemprop="thumbnailUrl" href="([^"]+)"/)
+      || html.match(/"avatar":\{"thumbnails":\[\{"url":"([^"]+)"/)
+      || html.match(/(https:\/\/yt3\.(?:googleusercontent|ggpht)\.com\/[\w\-_/]+=s\d+[^"\\]*)/);
     if (m) ch.avatar = decode(m[1]).replace(/=s\d+[^"]*$/, "=s88-c-k-c0x00ffffff-no-rj");
-  } catch {}
+    console.log(`${ch.name}: avatar ${m ? "găsit" : "NEgăsit"}`);
+  } catch (e) {
+    console.log(`${ch.name}: avatar eroare – ${e.message}`);
+  }
 }
 
 function parseFeed(xml) {
