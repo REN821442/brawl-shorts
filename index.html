@@ -74,6 +74,11 @@ input{width:min(260px,100%)}
 .ava img{width:100%;height:100%;object-fit:cover;display:block}
 .crow .av{overflow:hidden}.crow .av img{width:100%;height:100%;object-fit:cover}
 .empty{padding:40px 20px;text-align:center;border:3px dashed var(--muted);border-radius:18px;color:var(--muted);font-weight:700}
+  .ctog{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between;font:22px "Lilita One",sans-serif;color:var(--ink);background:var(--card);border:3px solid var(--line);border-radius:16px;padding:12px 20px;min-height:56px;cursor:pointer;box-shadow:0 5px 0 var(--line);margin-bottom:28px}
+.ctog:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.ctog .arr{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--yel);color:var(--line);border:3px solid var(--line);font-size:14px;transition:transform .2s}
+.ctog[aria-expanded=true]{margin-bottom:16px}.ctog[aria-expanded=true] .arr{transform:rotate(180deg)}
+.clist{margin-bottom:12px}
 .crow{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--card);border:3px solid var(--line);border-radius:20px;padding:16px 20px;box-shadow:0 6px 0 var(--line);margin-bottom:28px}
 .av{width:64px;height:64px;border-radius:16px;border:3px solid var(--line);background:var(--pink);display:grid;place-items:center;font:28px "Lilita One",sans-serif;color:#fff;flex:none;transform:rotate(-4deg)}
 .crow h3{margin:0;font:26px/1.1 "Lilita One",sans-serif}
@@ -209,9 +214,14 @@ const render=()=>{
   document.getElementById("gtitle").textContent=c?"Shorturi de la "+c.name:"Toate shorturile";
   document.getElementById("count").textContent=list.length+(list.length===1?" short":" shorturi");
   document.getElementById("grid").innerHTML=list.length?list.map(item).join(""):`<div class="empty" style="grid-column:1/-1">Niciun short nu se potrivește cu „${esc(q.value)}”.</div>`;
-  document.getElementById("creatori").innerHTML=(c?[c]:CREATORS).map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const v=mine.reduce((a,s)=>a+s.views,0);
-    return `<div class="crow">${ava(c.key,c.name,"av")}<div><h3>${esc(c.name)}</h3><p>${esc(c.handle)} · ${mine.length} shorturi · ${fmt(v)} vizionări</p></div><span class="sp"></span><a class="yt" href="https://www.youtube.com/${esc(c.handle)}/shorts" target="_blank" rel="noopener">Canalul pe YouTube</a></div>`}).join("")};
-
+   const rows=(c?[c]:CREATORS).map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const v=mine.reduce((a,s)=>a+s.views,0);
+    return `<div class="crow">${ava(c.key,c.name,"av")}<div><h3>${esc(c.name)}</h3><p>${esc(c.handle)} · ${mine.length} shorturi · ${fmt(v)} vizionări</p></div><span class="sp"></span><a class="yt" href="https://www.youtube.com/${esc(c.handle)}/shorts" target="_blank" rel="noopener">Canalul pe YouTube</a></div>`}).join("");
+  document.getElementById("creatori").innerHTML=c?rows:`<button class="ctog" id="ctog" aria-expanded="${copen}" aria-controls="clist">Vezi toți creatorii (${CREATORS.length})<span class="arr" aria-hidden="true">▼</span></button><div class="clist" id="clist"${copen?"":" hidden"}>${rows}</div>`};
+let copen=false;
+document.getElementById("creatori").addEventListener("click",e=>{const t=e.target.closest("#ctog");if(!t)return;copen=!copen;
+  t.setAttribute("aria-expanded",copen);document.getElementById("clist").hidden=!copen;
+  if(!copen){const bar=document.querySelector(".bar");const y=t.getBoundingClientRect().top+scrollY-(bar?bar.offsetHeight:0)-12;
+    scrollTo({top:Math.max(0,y),behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})}});
 cbox.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;cur=b.dataset.k;renderCreators();render()});
 q.addEventListener("input",render);sort.addEventListener("change",render);
 
