@@ -214,4 +214,97 @@ const card=(s,m)=>{const h=hue(s.id);return `<a class="card" data-id="${esc(s.id
   <div class="bot"><h3>${esc(s.title)}</h3>${m?`<div class="meta"><span>${fmt(s.views)} viz.</span><span>${esc(fdate(s.date))}</span></div>`:""}</div></a>`};
 
 let AV={},HANDLE={};
-const ava=(ck,name,cls="ava")=>{const h=hue(ck);const letter=esc((name||"?")[0]);const u=HANDLE[ck]?"https://unavatar.io/youtube/"+encodeURIComponent(HANDLE[ck].replace(/^@/,""))+"?fallback=false":"";const src=AV[ck]||u;return `<span class="${cls}" style="background:hsl(${h} 75%
+const ava=(ck,name,cls="ava")=>{const h=hue(ck);const letter=esc((name||"?")[0]);const u=HANDLE[ck]?"https://unavatar.io/youtube/"+encodeURIComponent(HANDLE[ck].replace(/^@/,""))+"?fallback=false":"";const src=AV[ck]||u;return `<span class="${cls}" style="background:hsl(${h} 75% 48%)">${src?`<img src="${esc(src)}" data-u="${AV[ck]?esc(u):""}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.u){this.src=this.dataset.u;this.dataset.u=''}else this.parentNode.textContent='${letter}'">`:letter}</span>`};
+const item=s=>`<div class="item">${card(s)}<a class="who" href="https://www.youtube.com/${esc(HANDLE[s.ck]||"")}" target="_blank" rel="noopener">${ava(s.ck,s.cname)}<span class="wn"><span>${esc(s.cname)}</span><small><span class="nw">${fmt(s.views)} viz.</span> · <span class="nw">${esc(fdate(s.date))}</span></small></span></a></div>`;
+const cbox=document.getElementById("creators"),q=document.getElementById("q"),sort=document.getElementById("sort");
+const renderCreators=()=>{cbox.innerHTML=[{key:"all",name:"Toți"},...CREATORS].map(c=>`<button class="cbtn" data-k="${esc(c.key)}" aria-pressed="${c.key===cur}">${esc(c.name)}</button>`).join("")};
+const render=()=>{
+  const term=q.value.trim().toLowerCase();
+  const list=ALL.filter(s=>(cur==="all"||s.ck===cur)&&(!term||s.title.toLowerCase().includes(term)));
+  list.sort(sort.value==="views"?(a,b)=>b.views-a.views:(a,b)=>b.date.localeCompare(a.date)||b.views-a.views);
+  const c=CREATORS.find(x=>x.key===cur);
+  document.getElementById("gtitle").textContent=c?"Shorturi de la "+c.name:"Toate shorturile";
+  document.getElementById("count").textContent=list.length+(list.length===1?" short":" shorturi");
+  document.getElementById("grid").innerHTML=list.length?list.map(item).join(""):`<div class="empty" style="grid-column:1/-1">Niciun short nu se potrivește cu „${esc(q.value)}”.</div>`;
+  const rows=(c?[c]:CREATORS).map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const v=mine.reduce((a,s)=>a+s.views,0);
+    return `<div class="crow">${ava(c.key,c.name,"av")}<div><h3>${esc(c.name)}</h3><p>${esc(c.handle)} · ${mine.length} shorturi · ${fmt(v)} vizionări</p></div><span class="sp"></span><a class="yt" href="https://www.youtube.com/${esc(c.handle)}/shorts" target="_blank" rel="noopener">Canalul pe YouTube</a></div>`}).join("");
+  document.getElementById("creatori").innerHTML=c?rows:`<button class="ctog" id="ctog" aria-expanded="${copen}" aria-controls="clist">Vezi toți creatorii (${CREATORS.length})<span class="arr" aria-hidden="true">▼</span></button><div class="clist" id="clist"${copen?"":" hidden"}>${rows}</div>`};
+let copen=false;
+document.getElementById("creatori").addEventListener("click",e=>{const t=e.target.closest("#ctog");if(!t)return;copen=!copen;
+  t.setAttribute("aria-expanded",copen);document.getElementById("clist").hidden=!copen;
+  if(!copen){const bar=document.querySelector(".bar");const y=t.getBoundingClientRect().top+scrollY-(bar?bar.offsetHeight:0)-12;
+    scrollTo({top:Math.max(0,y),behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})}});
+
+cbox.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;cur=b.dataset.k;renderCreators();render()});
+q.addEventListener("input",render);sort.addEventListener("change",render);
+
+const modal=document.getElementById("modal"),frame=document.getElementById("frame"),mlink=document.getElementById("mlink");
+const close=()=>{modal.classList.remove("on");frame.innerHTML=""};
+document.addEventListener("click",e=>{const a=e.target.closest("a.card");if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();const id=a.dataset.id;
+  frame.innerHTML=`<iframe src="https://www.youtube.com/embed/${esc(id)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Short"></iframe>`;
+  mlink.href="https://www.youtube.com/shorts/"+id;modal.classList.add("on");document.getElementById("mclose").focus()});
+document.getElementById("mclose").addEventListener("click",close);
+modal.addEventListener("click",e=>{if(e.target===modal)close()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+
+const DAY=864e5;
+// Ponderile scorului (se adună la 100). Schimbă numerele de aici ca să conteze mai mult sau mai puțin un criteriu.
+const W={views:30,avg:25,month:20,subs:15,recent:10};
+const COLS=[
+ {k:"score",l:"Scor",num:1,f:v=>v.toFixed(1),bar:1},
+ {k:"views",l:"Vizionări totale",num:1,f:v=>fmt(v)},
+ {k:"avg",l:"Medie / short",num:1,f:v=>fmt(Math.round(v))},
+ {k:"month",l:"Shorturi în 30 zile",num:1,f:v=>v},
+ {k:"subs",l:"Abonați",num:1,f:v=>v?fmt(v):"—"},
+ {k:"last",l:"Ultimul short",num:1,f:v=>v?fdate(v):"—",sortBy:c=>c.last||""},
+ {k:"n",l:"Shorturi pe site",num:1,f:v=>v},
+ {k:"best",l:"Cel mai vizionat short",sortBy:c=>c.bestViews}
+];
+let lbKey="score";
+const stats=()=>{const now=Date.now();
+  const rows=CREATORS.map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const views=mine.reduce((a,s)=>a+s.views,0);
+    const best=mine.reduce((a,s)=>!a||s.views>a.views?s:a,null);const last=mine.reduce((a,s)=>s.date>a?s.date:a,"");
+    return {c,key:c.key,name:c.name,subs:c.subs||0,n:mine.length,views,avg:mine.length?views/mine.length:0,
+      month:mine.filter(s=>now-new Date(s.date+"T12:00:00Z")<=30*DAY).length,best,bestViews:best?best.views:0,last,
+      days:last?(now-new Date(last+"T12:00:00Z"))/DAY:999}});
+  const norm=(k,log)=>{const f=v=>log?Math.log10(1+v):v;const vs=rows.map(r=>f(r[k]));const lo=Math.min(...vs),hi=Math.max(...vs);
+    rows.forEach(r=>{(r.parts||(r.parts={}))[k]=hi>lo?(f(r[k])-lo)/(hi-lo):1})};
+  norm("views",1);norm("avg",1);norm("month",0);norm("subs",1);
+  rows.forEach(r=>{r.parts.recent=Math.max(0,1-r.days/30);r.score=Object.keys(W).reduce((a,k)=>a+W[k]*r.parts[k],0)});
+  return rows};
+const val=(r,col)=>col.sortBy?col.sortBy(r):r[col.k];
+const goCreator=k=>{cur=k;renderCreators();render();location.hash="shorts"};
+const renderLB=()=>{
+  const col=COLS.find(c=>c.k===lbKey);const rows=stats().sort((a,b)=>{const x=val(a,col),y=val(b,col);return (y>x)-(y<x)||b.score-a.score});
+  document.getElementById("lbsub").textContent=rows.length+" creatori · sortat după „"+col.l.toLowerCase()+"”";
+  document.getElementById("lbhead").innerHTML='<th>#</th><th>Creator</th>'+COLS.map(c=>`<th class="${c.num?"num":""}"${c.k===lbKey?' aria-sort="descending"':""}><button data-k="${c.k}">${c.l}${c.k===lbKey?" ▼":""}</button></th>`).join("");
+  document.getElementById("lbbody").innerHTML=rows.map((r,i)=>`<tr><td class="rk">${i+1}</td><td><button class="cr" data-k="${esc(r.key)}">${ava(r.key,r.name)}<span>${esc(r.name)}</span></button></td>`+COLS.map(c=>{
+    if(c.k==="best")return `<td>${r.best?`<a class="best" href="https://www.youtube.com/shorts/${esc(r.best.id)}" target="_blank" rel="noopener">${esc(r.best.title)} <small>· ${fmt(r.best.views)}</small></a>`:"—"}</td>`;
+    if(c.k==="score")return `<td class="num sc" title="${Object.keys(W).map(k=>k+": "+(W[k]*r.parts[k]).toFixed(1)+"/"+W[k]).join(" · ")}">${r.score.toFixed(1)}<div class="vb" style="width:${r.score.toFixed(1)}%"></div></td>`;
+    return `<td class="num">${esc(c.f(r[c.k]))}</td>`}).join("")+"</tr>").join("");
+  const top=rows.slice(0,3);
+  document.getElementById("podium").innerHTML=top.map((r,i)=>`<button class="pod p${i+1}" data-k="${esc(r.key)}">${ava(r.key,r.name)}<b>${esc(r.name)}</b><span class="val">${esc(col.k==="score"?r.score.toFixed(1)+" puncte":col.k==="best"?fmt(r.bestViews)+" viz.":col.k==="last"?(r.last?fdate(r.last):"—"):col.f(r[col.k]))}</span><div class="step">${i+1}</div></button>`).join("");
+};
+document.getElementById("lbhead").addEventListener("click",e=>{const b=e.target.closest("button");if(b){lbKey=b.dataset.k;renderLB()}});
+document.getElementById("clasament").addEventListener("click",e=>{const b=e.target.closest(".cr,.pod");if(b)goCreator(b.dataset.k)});
+const route=()=>{const lb=location.hash==="#clasament";document.body.dataset.view=lb?"lb":"sh";
+  document.querySelectorAll("nav a[data-v]").forEach(a=>a.toggleAttribute("aria-current",a.dataset.v===(lb?"lb":"sh")));
+  document.querySelectorAll("nav a[data-v]").forEach(a=>{if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
+  if(lb)renderLB()};
+addEventListener("hashchange",route);route();
+
+Promise.all([fetch("channels.json",{cache:"no-store"}).then(r=>r.json()),fetch("data/shorts.json",{cache:"no-store"}).then(r=>r.json())]).then(([ch,data])=>{
+  CREATORS=ch;AV=Object.fromEntries(ch.filter(c=>c.avatar).map(c=>[c.key,c.avatar]));HANDLE=Object.fromEntries(ch.map(c=>[c.key,c.handle]));const names=Object.fromEntries(ch.map(c=>[c.key,c.name]));
+  ALL=data.shorts.filter(s=>names[s.ck]).map(s=>({...s,cname:names[s.ck]}));
+  newest=ALL.reduce((a,s)=>s.date>a?s.date:a,"");
+  const total=ALL.reduce((a,s)=>a+s.views,0);
+  document.getElementById("stats").innerHTML=[[ALL.length,"shorturi"],[CREATORS.length,CREATORS.length===1?"creator":"creatori"],[fmt(total),"vizionări"]].map(([b,t])=>`<div class="stat"><b>${esc(b)}</b><span>${t}</span></div>`).join("");
+  const top3=[...ALL].sort((a,b)=>b.views-a.views).slice(0,3);
+  document.getElementById("fan").innerHTML=[top3[1],top3[0],top3[2]].filter(Boolean).map(s=>card(s,true)).join("");
+  if(data.updated){const d=new Date(data.updated);document.getElementById("upd").textContent="Actualizat automat: "+d.toLocaleString("ro-RO",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
+  renderCreators();render();route();
+}).catch(()=>{document.getElementById("grid").innerHTML='<div class="empty" style="grid-column:1/-1">Nu am putut încărca shorturile. Reîncarcă pagina.</div>'});
+}
+</script>
+</body>
+</html>
