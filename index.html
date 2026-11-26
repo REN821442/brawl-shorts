@@ -140,7 +140,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <script>
 {
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmt=n=>n>=1e6?(n/1e6).toFixed(n>=1e7?0:1).replace(".",",")+" mil.":n>=1e3?Math.round(n/1e3)+" mii":String(n);
+const fmt=n=>n>=1e6?+(n/1e6).toFixed(n>=1e7?0:1)+"M":n>=1e3?Math.round(n/1e3)+"K":String(n);
 const MON=["ian.","feb.","mar.","apr.","mai","iun.","iul.","aug.","sept.","oct.","nov.","dec."];
 const fdate=d=>{const [y,m,dd]=d.split("-");return (+dd)+" "+MON[+m-1]+(y!==String(new Date().getFullYear())?" "+y:"")};
 const hue=id=>{let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))%360;return h};
