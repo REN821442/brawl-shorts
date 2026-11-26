@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brawl Shorts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: loud, playful, arcade — like a mobile game lobby
+   IDEA: a wall of collectible vertical cards, each short a "card" you pull
+   PICTURE: fanned stack of three phone-shaped shorts in the hero
+   COLOUR and TYPE: royal blue field, punchy yellow, hot pink accent, thick ink outlines; Lilita One + Nunito
+   LAYOUT: hero band, sticky filter bar, dense 9:16 card grid, footer */
+:root{color-scheme:light dark;
+--bg:light-dark(#eef1ff,#0b1036);--ink:light-dark(#0d1030,#f3f4ff);--muted:light-dark(#4a4f7a,#a9afe0);
+--blue:#1f3fe0;--blue2:#142aa8;--yel:#ffd31a;--pink:#ff2e88;--line:#0d1030;--card:light-dark(#fff,#151c55)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+h1,h2,.lil{font-family:"Lilita One",Impact,sans-serif;font-weight:400;letter-spacing:.01em}
+a{color:inherit}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+/* nav */
+nav{background:var(--blue2);color:#fff}
+nav .wrap{display:flex;align-items:center;gap:12px;padding:12px max(5vw,16px);flex-wrap:wrap}
+.logo{font-family:"Lilita One",sans-serif;font-size:24px;display:flex;gap:8px;align-items:center;text-decoration:none}
+.logo b{background:var(--yel);color:var(--line);padding:0 10px;border:3px solid var(--line);border-radius:10px;transform:rotate(-3deg);display:inline-block}
+nav .sp{flex:1}
+nav a.l{font-weight:800;text-decoration:none;opacity:.9;padding:10px 6px}
+nav a.l:hover{opacity:1;text-decoration:underline}
+/* hero */
+.hero{background:radial-gradient(circle at 80% 30%,#3a5cff 0,var(--blue) 45%,var(--blue2) 100%);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:center}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.02;margin:0 0 14px;text-wrap:balance;text-shadow:0 4px 0 var(--line)}
+.hero p{font-size:17px;max-width:52ch;margin:0 0 22px;color:#dfe5ff}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:var(--yel);color:var(--line);border:3px solid var(--line);border-radius:14px;padding:8px 14px;box-shadow:0 5px 0 var(--line)}
+.stat b{font-family:"Lilita One",sans-serif;font-size:26px;display:block;line-height:1.1}
+.stat span{font-size:13px;font-weight:800}
+.burst{position:absolute;inset:auto -120px -160px auto;width:520px;height:520px;opacity:.18;pointer-events:none}
+.fan{position:relative;height:clamp(320px,34vw,420px)}
+.fan a{position:absolute;top:50%;left:50%;width:clamp(150px,15vw,190px);aspect-ratio:9/16;text-decoration:none}
+.fan a:nth-child(1){transform:translate(-125%,-48%) rotate(-12deg)}
+.fan a:nth-child(2){transform:translate(-50%,-55%) rotate(0);z-index:2}
+.fan a:nth-child(3){transform:translate(25%,-48%) rotate(12deg)}
+.fan a:hover{z-index:3}
+@media (prefers-reduced-motion:no-preference){.fan a{transition:transform .25s}.fan a:nth-child(2):hover{transform:translate(-50%,-60%) scale(1.04)}}
+/* card */
+.card{display:flex;flex-direction:column;position:relative;aspect-ratio:9/16;border:3px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 0 var(--line);text-decoration:none;color:#fff;background:var(--g,#333);isolation:isolate}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(5,8,30,.85) 100%)}
+.card .top{display:flex;justify-content:space-between;padding:10px;gap:6px}
+.chip{font-size:12px;font-weight:800;background:rgba(10,14,50,.7);border-radius:99px;padding:2px 9px;white-space:nowrap}
+.chip.n{background:var(--yel);color:var(--line)}
+.card .play{margin:auto;width:54px;height:54px;border-radius:50%;background:var(--pink);border:3px solid var(--line);display:grid;place-items:center;box-shadow:0 4px 0 var(--line)}
+.card .play svg{width:20px;margin-left:3px}
+.card .bot{padding:10px 12px 12px}
+.card h3{margin:0 0 4px;font-size:15px;line-height:1.2;font-weight:800;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty}
+.card .meta{font-size:13px;color:#d6dbff;display:flex;gap:8px;flex-wrap:wrap}
+.card .meta span{white-space:nowrap}
+.card:focus-visible{outline:4px solid var(--yel);outline-offset:3px}
+@media (prefers-reduced-motion:no-preference){.grid .card{transition:transform .15s,box-shadow .15s}.grid .card:hover{transform:translateY(-4px);box-shadow:0 10px 0 var(--line)}}
+/* toolbar */
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:3px solid var(--line)}
+.bar .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px max(5vw,16px)}
+.creators{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.cbtn{font:800 15px Nunito,sans-serif;min-height:44px;padding:0 16px;border:3px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--line)}
+.cbtn[aria-pressed=true]{background:var(--yel);color:var(--line)}
+.cbtn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+input,select{font:700 16px Nunito,sans-serif;min-height:44px;padding:0 12px;border:3px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+input{width:min(260px,100%)}
+/* grid */
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.head h2{font-size:clamp(28px,4vw,40px);margin:0;line-height:1.05}
+.head p{margin:0;color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:20px 18px}
+.empty{padding:40px 20px;text-align:center;border:3px dashed var(--muted);border-radius:18px;color:var(--muted);font-weight:700}
+/* creator band */
+.crow{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--card);border:3px solid var(--line);border-radius:20px;padding:16px 20px;box-shadow:0 6px 0 var(--line);margin-bottom:28px}
+.av{width:64px;height:64px;border-radius:16px;border:3px solid var(--line);background:var(--pink);display:grid;place-items:center;font:28px "Lilita One",sans-serif;color:#fff;flex:none;transform:rotate(-4deg)}
+.crow h3{margin:0;font:26px/1.1 "Lilita One",sans-serif}
+.crow p{margin:2px 0 0;color:var(--muted);font-weight:700}
+.crow .sp{flex:1}
+.yt{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:3px solid var(--line);border-radius:12px;background:#ff2a2a;color:#fff;font-weight:800;text-decoration:none;box-shadow:0 4px 0 var(--line)}
+footer{background:var(--blue2);color:#cfd6ff;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:600px){.hero .wrap{grid-template-columns:1fr}.fan{height:300px}.fan a{width:130px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card h3{font-size:14px}input{width:100%}}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(5,8,30,.85);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.mbox{width:min(380px,100%);display:flex;flex-direction:column;gap:10px}
+.mbox .frame{aspect-ratio:9/16;max-height:78vh;border:3px solid var(--line);border-radius:18px;overflow:hidden;background:#000;box-shadow:0 6px 0 var(--line)}
+.mbox iframe{width:100%;height:100%;border:0}
+.mrow{display:flex;gap:10px;justify-content:space-between}
+.x{font:800 15px Nunito,sans-serif;min-height:44px;padding:0 16px;border:3px solid var(--line);border-radius:12px;background:var(--yel);color:var(--line);cursor:pointer}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="logo" href="#top"><b>BRAWL</b> Shorts</a>
+  <span class="sp"></span>
+  <a class="l" href="#shorts">Shorturi</a>
+  <a class="l" href="#creatori">Creatori</a>
+</div></nav>
+
+<header class="hero band" id="top">
+  <svg class="burst" viewBox="0 0 200 200" aria-hidden="true"><g fill="#ffd31a"><polygon id="ray" points="100,100 96,0 104,0"/></g></svg>
+  <div class="wrap">
+    <div>
+      <h1>Cele mai noi shorturi de Brawl, într-un singur loc</h1>
+      <p>Toate shorturile creatorilor de Brawl Stars adunate pe un perete. Alege un creator, caută un titlu și apasă pe card ca să-l vezi pe YouTube.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="fan" id="fan" aria-label="Cele mai vizionate shorturi"></div>
+  </div>
+</header>
+
+<div class="bar"><div class="wrap">
+  <div class="creators" id="creators" role="group" aria-label="Filtrează după creator"></div>
+  <input id="q" type="search" placeholder="Caută un short…" aria-label="Caută după titlu">
+  <select id="sort" aria-label="Sortează">
+    <option value="new">Cele mai noi</option>
+    <option value="views">Cele mai vizionate</option>
+  </select>
+</div></div>
+
+<main class="band" id="shorts"><div class="wrap">
+  <div id="creatori"></div>
+  <div class="head"><h2 id="gtitle">Toate shorturile</h2><p id="count"></p></div>
+  <div class="grid" id="grid"><div class="empty" style="grid-column:1/-1">Se încarcă shorturile…</div></div>
+</div></main>
+
+<footer class="band"><div class="wrap">
+  <span>Brawl Shorts · site de fani, neafiliat cu Supercell.</span>
+  <span id="upd"></span>
+</div></footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Player short"><div class="mbox"><div class="frame" id="frame"></div><div class="mrow"><a class="yt" id="mlink" href="#" target="_blank" rel="noopener">Deschide pe YouTube</a><button class="x" id="mclose">Închide</button></div></div></div>
+
+<script>
+{
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>n>=1e6?(n/1e6).toFixed(n>=1e7?0:1).replace(".",",")+" mil.":n>=1e3?Math.round(n/1e3)+" mii":String(n);
+const MON=["ian.","feb.","mar.","apr.","mai","iun.","iul.","aug.","sept.","oct.","nov.","dec."];
+const fdate=d=>{const [y,m,dd]=d.split("-");return (+dd)+" "+MON[+m-1]+(y!==String(new Date().getFullYear())?" "+y:"")};
+const hue=id=>{let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))%360;return h};
+const PLAY='<svg viewBox="0 0 20 22"><path d="M2 2l16 9-16 9z" fill="#fff" stroke="#0d1030" stroke-width="2" stroke-linejoin="round"/></svg>';
+const rays=document.querySelector(".burst g");rays.innerHTML=Array.from({length:18},(_,i)=>`<use href="#ray" transform="rotate(${i*20} 100 100)"/>`).join("")+rays.innerHTML;
+
+let CREATORS=[],ALL=[],newest="",cur="all";
+const card=s=>{const h=hue(s.id);return `<a class="card" data-id="${esc(s.id)}" href="https://www.youtube.com/shorts/${esc(s.id)}" target="_blank" rel="noopener" style="--g:linear-gradient(160deg,hsl(${h} 85% 58%),hsl(${(h+50)%360} 80% 38%))" aria-label="${esc(s.title)} – ${esc(s.cname)}">
+  <img src="https://i.ytimg.com/vi/${esc(s.id)}/oar2.jpg" alt="" loading="lazy" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://i.ytimg.com/vi/${esc(s.id)}/hqdefault.jpg'}else this.remove()">
+  <div class="top"><span class="chip">${esc(s.cname)}</span>${s.date===newest?'<span class="chip n">NOU</span>':s.dur?`<span class="chip">${esc(s.dur)}</span>`:""}</div>
+  <span class="play" aria-hidden="true">${PLAY}</span>
+  <div class="bot"><h3>${esc(s.title)}</h3><div class="meta"><span>${fmt(s.views)} viz.</span><span>${esc(fdate(s.date))}</span></div></div></a>`};
+
+const cbox=document.getElementById("creators"),q=document.getElementById("q"),sort=document.getElementById("sort");
+const renderCreators=()=>{cbox.innerHTML=[{key:"all",name:"Toți"},...CREATORS].map(c=>`<button class="cbtn" data-k="${esc(c.key)}" aria-pressed="${c.key===cur}">${esc(c.name)}</button>`).join("")};
+const render=()=>{
+  const term=q.value.trim().toLowerCase();
+  const list=ALL.filter(s=>(cur==="all"||s.ck===cur)&&(!term||s.title.toLowerCase().includes(term)));
+  list.sort(sort.value==="views"?(a,b)=>b.views-a.views:(a,b)=>b.date.localeCompare(a.date)||b.views-a.views);
+  const c=CREATORS.find(x=>x.key===cur);
+  document.getElementById("gtitle").textContent=c?"Shorturi de la "+c.name:"Toate shorturile";
+  document.getElementById("count").textContent=list.length+(list.length===1?" short":" shorturi");
+  document.getElementById("grid").innerHTML=list.length?list.map(card).join(""):`<div class="empty" style="grid-column:1/-1">Niciun short nu se potrivește cu „${esc(q.value)}”.</div>`;
+  document.getElementById("creatori").innerHTML=(c?[c]:CREATORS).map(c=>{const mine=ALL.filter(s=>s.ck===c.key);const v=mine.reduce((a,s)=>a+s.views,0);
+    return `<div class="crow"><div class="av" aria-hidden="true">${esc(c.name[0])}</div><div><h3>${esc(c.name)}</h3><p>${esc(c.handle)} · ${mine.length} shorturi · ${fmt(v)} vizionări</p></div><span class="sp"></span><a class="yt" href="https://www.youtube.com/${esc(c.handle)}/shorts" target="_blank" rel="noopener">Canalul pe YouTube</a></div>`}).join("")};
+
+cbox.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;cur=b.dataset.k;renderCreators();render()});
+q.addEventListener("input",render);sort.addEventListener("change",render);
+
+// player
+const modal=document.getElementById("modal"),frame=document.getElementById("frame"),mlink=document.getElementById("mlink");
+const close=()=>{modal.classList.remove("on");frame.innerHTML=""};
+document.addEventListener("click",e=>{const a=e.target.closest("a.card");if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();const id=a.dataset.id;
+  frame.innerHTML=`<iframe src="https://www.youtube.com/embed/${esc(id)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Short"></iframe>`;
+  mlink.href="https://www.youtube.com/shorts/"+id;modal.classList.add("on");document.getElementById("mclose").focus()});
+document.getElementById("mclose").addEventListener("click",close);
+modal.addEventListener("click",e=>{if(e.target===modal)close()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+
+Promise.all([fetch("channels.json",{cache:"no-store"}).then(r=>r.json()),fetch("data/shorts.json",{cache:"no-store"}).then(r=>r.json())]).then(([ch,data])=>{
+  CREATORS=ch;const names=Object.fromEntries(ch.map(c=>[c.key,c.name]));
+  ALL=data.shorts.filter(s=>names[s.ck]).map(s=>({...s,cname:names[s.ck]}));
+  newest=ALL.reduce((a,s)=>s.date>a?s.date:a,"");
+  const total=ALL.reduce((a,s)=>a+s.views,0);
+  document.getElementById("stats").innerHTML=[[ALL.length,"shorturi"],[CREATORS.length,CREATORS.length===1?"creator":"creatori"],[fmt(total),"vizionări"]].map(([b,t])=>`<div class="stat"><b>${esc(b)}</b><span>${t}</span></div>`).join("");
+  const top3=[...ALL].sort((a,b)=>b.views-a.views).slice(0,3);
+  document.getElementById("fan").innerHTML=[top3[1],top3[0],top3[2]].filter(Boolean).map(card).join("");
+  if(data.updated){const d=new Date(data.updated);document.getElementById("upd").textContent="Actualizat automat: "+d.toLocaleString("ro-RO",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
+  renderCreators();render();
+}).catch(()=>{document.getElementById("grid").innerHTML='<div class="empty" style="grid-column:1/-1">Nu am putut încărca shorturile. Reîncarcă pagina.</div>'});
+}
+</script>
+</body>
+</html>
