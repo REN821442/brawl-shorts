@@ -76,5 +76,17 @@
     "name": "Cultural Brawler",
     "handle": "@culturalbrawler",
     "channelId": "UCTj4bc7WRQ_v4i2BCiB_hFQ"
+  },
+  {
+    "key": "astral",
+    "name": "AstralRoyale",
+    "handle": "@astralroyale",
+    "channelId": "UCzijib7NZ1lthakWBqLlfJg"
+  },
+  {
+    "key": "fey",
+    "name": "Fey33",
+    "handle": "@Fey33",
+    "channelId": "UC2ZZAjDoVXv6QaaASBOQBgQ"
   }
 ]
