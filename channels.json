@@ -10,5 +10,71 @@
     "name": "REN",
     "handle": "@REN821",
     "channelId": "UCjGQg05RG0sG1lAjh7N34Pg"
+  },
+  {
+    "key": "airgemy",
+    "name": "AIRGEMY",
+    "handle": "@AIRGEMY",
+    "channelId": "UCjHaiSX0jk8RYKmCvy5LKQg"
+  },
+  {
+    "key": "arcfx",
+    "name": "ArcFX",
+    "handle": "@ArcFX1",
+    "channelId": "UCxoXbSuft5JwOc4kF7hQ7iQ"
+  },
+  {
+    "key": "airoc",
+    "name": "Airoc",
+    "handle": "@SuperAiroc",
+    "channelId": "UC0tALuh3HI4aKSxvoz0OXQQ"
+  },
+  {
+    "key": "bief",
+    "name": "Bief",
+    "handle": "@OfficialBief",
+    "channelId": "UCMhvjdX6g_VfC2TFdWwIPdQ"
+  },
+  {
+    "key": "brocode",
+    "name": "BroCode",
+    "handle": "@BroCodeBrawlStars",
+    "channelId": "UCvfOguCxMXoQDzZb3uo4HOA"
+  },
+  {
+    "key": "carnage",
+    "name": "CarnageGame",
+    "handle": "@CarnageGameYT",
+    "channelId": "UChAJawKCXoukSyLwUpnSxdA"
+  },
+  {
+    "key": "kevin",
+    "name": "Kevin Brawl Stars",
+    "handle": "@KevinFBrawlStars",
+    "channelId": "UCQrFGvPdGeqADOJSLkKgqPA"
+  },
+  {
+    "key": "walkingism",
+    "name": "Walkingism",
+    "handle": "@Walkingism",
+    "channelId": "UCiIs7oUGbTeeut5A71SlWow"
+  },
+  {
+    "key": "driebananen",
+    "name": "DrieBananen",
+    "handle": "@driebananen",
+    "channelId": "UCXa7fea5wXEl7p3gqO-y7aw"
+  },
+  {
+    "key": "brawlquota",
+    "name": "BrawlQuota",
+    "handle": "@BrawlQuota",
+    "channelId": "UCkjpiyLWucufU8oBBXkw5uA"
+  },
+  {
+    "key": "cultural",
+    "name": "Cultural Brawler",
+    "handle": "@culturalbrawler",
+    "channelId": "UCTj4bc7WRQ_v4i2BCiB_hFQ"
   }
 ]
